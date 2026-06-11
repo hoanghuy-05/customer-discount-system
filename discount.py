@@ -4,20 +4,38 @@ MIN_TOTAL_FOR_DISCOUNT = 50_000_000
 # Tỷ lệ giảm giá cho khách hàng thân thiết là 10%
 DISCOUNT_RATE = 0.1
 
-
 # Hàm tính tỷ lệ giảm giá
 # previous_total: tổng giá trị mua hàng trước đó trong năm
-# current_order: giá trị đơn hàng hiện tại, mặc định là 0 nếu không truyền vào
+# current_order: giá trị đơn hàng hiện tại
 def calculate_discount(previous_total, current_order=0):
 
-    # Tính tổng giá trị mua hàng sau khi cộng thêm đơn hàng hiện tại
-    total_purchase = previous_total + current_order
+    # Kiểm tra điều kiện tổng tiền mua hàng để được giảm giá
+    if previous_total >= MIN_TOTAL_FOR_DISCOUNT:
 
-    # Nếu tổng giá trị mua hàng đạt từ 50 triệu trở lên
-    if total_purchase >= MIN_TOTAL_FOR_DISCOUNT:
-
-        # Trả về tỷ lệ giảm giá 10%
+        # Nếu thỏa mãn điều kiện thì trả về tỷ lệ giảm giá 10%
         return DISCOUNT_RATE
 
-    # Nếu chưa đạt 50 triệu thì không được giảm giá
+    # Nếu chưa thỏa mãn điều kiện thì không được giảm giá
     return 0
+
+test_cases = [
+    ("TC01", 60_000_000, 2_000_000, 0.1),
+    ("TC02", 30_000_000, 2_000_000, 0),
+    ("TC03", 49_000_000, 2_000_000, 0.1),
+]
+
+for tc, previous_total, current_order, expected in test_cases:
+    actual = calculate_discount(previous_total, current_order)
+
+    if actual == expected:
+        status = "PASS"
+    else:
+        status = "FAIL"
+
+    print("--------------------------------")
+    print(f"{tc}")
+    print(f"Tong mua truoc day: {previous_total}")
+    print(f"Don hang moi: {current_order}")
+    print(f"Expected: {expected}")
+    print(f"Actual: {actual}")
+    print(f"Status: {status}")
